@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,13 @@ class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.Conve
     private final Context context;
     OnClickListener listener;
 
-    public interface OnClickListener{
+    public interface OnClickListener {
         void onClick(int position);
     }
-    public ConversationAdapter(Context context){ this.context = context;}
+
+    public ConversationAdapter(Context context) {
+        this.context = context;
+    }
 
 
     @Override
@@ -34,26 +38,51 @@ class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.Conve
 
     @Override
     public void onBindViewHolder(ConversationAdapter.ConversationViewHolder holder, int position) {
+        Conversation convo = convos.get(position);
+        String[] convoParticipants = convo.getId().split("\\.");
+        String[] str = convoParticipants[0].split(":");
+        holder.tv.setText("");
+        String finalString = "";
+        for(String s : str){
+            finalString += s + ", ";
+        }
+        finalString = finalString.substring(0, finalString.length() -2); //TODO: Remove/replace own name from conversation list
+        holder.tv.append(finalString);
 
     }
-    public void setListener(OnClickListener listener){this.listener = listener;}
-    public List<Conversation> getConvos(){return convos;}
-    public void setConvos(List<Conversation> convos){
+
+    public void setListener(OnClickListener listener) {
+        this.listener = listener;
+    }
+
+    public List<Conversation> getConvos() {
+        return convos;
+    }
+
+    public void setConvos(List<Conversation> convos) {
         this.convos = convos;
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return convos.size();
     }
 
-    public class ConversationViewHolder extends RecyclerView.ViewHolder{
+    public class ConversationViewHolder extends RecyclerView.ViewHolder {
+        //TODO: Improve visuals
+        public TextView tv;
         public CardView cv;
 
         public ConversationViewHolder(View itemView) {
             super(itemView);
+            this.tv = itemView.findViewById(R.id.conversation_card_text);
             this.cv = itemView.findViewById(R.id.conversation_card);
+            itemView.setOnClickListener(view -> {
+                if(listener != null) {
+                    listener.onClick(getAdapterPosition());
+                }
+            });
         }
     }
 }

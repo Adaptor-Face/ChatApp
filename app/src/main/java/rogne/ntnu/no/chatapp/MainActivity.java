@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,8 +13,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     ConversationAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,16 +28,23 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+        fab.setOnClickListener(view -> {
+            Snackbar.make(view, "" + view.getId() + "  " + R.id.fab, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
         });
         RecyclerView rv = (RecyclerView) findViewById(R.id.conversations);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        ada
+        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        adapter = new ConversationAdapter(this);
+        new LoadConversations(c -> adapter.setConvos(c)).execute("asd");
+        //TODO: Make own divider
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(),
+                ((LinearLayoutManager)rv.getLayoutManager()).getOrientation());
+        rv.addItemDecoration(dividerItemDecoration);
+        adapter.setListener(v->  Snackbar.make(findViewById(R.id.fab), "" + adapter.getConvos().get(v).getId(), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
+        rv.setAdapter(adapter);
+
     }
 
     @Override

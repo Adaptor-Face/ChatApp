@@ -16,29 +16,48 @@ import java.util.List;
  * Created by Kristoffer on 2017-10-18.
  */
 
-public class LoadConversations extends AsyncTask<URL, Integer, List<Conversation>> {
+public class LoadConversations extends AsyncTask<String, Integer, List<Conversation>> {
+    public LoadConversations(OnPostExecute callback) {
+        this.callback = callback;
+    }
+
+    public interface OnPostExecute{
+        void onPostExecute(List<Conversation> convos);
+    }
+    OnPostExecute callback;
     @Override
-    protected List<Conversation> doInBackground(URL... urls) {
-        if(urls.length <1){
+    protected List<Conversation> doInBackground(String... strings) {
+        if(strings.length <1){
             return Collections.emptyList();
         }
         List<Conversation> result = new ArrayList<>();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        HttpURLConnection con = null;
+        result.add(new Conversation("Tom:Frank.convo"));
+        result.add(new Conversation("Sandra:Frank.convo"));
+        result.add(new Conversation("Sandra:Tom.convo"));
+        result.add(new Conversation("Sandra:Frank:Frank.convo"));
+        return result;
+    }
+    //TODO: replace tester function (doInBackground) with (doInBackgroundOld)
+    protected List<Conversation> doInBackgroundOld(URL... strings) {
+        if (strings.length < 1) {
+            return Collections.emptyList();
+        }
+        List<Conversation> result = new ArrayList<>();
+        HttpURLConnection con;
         try {
-            con = (HttpURLConnection) urls[0].openConnection();
+            con = (HttpURLConnection) strings[0].openConnection();
             JsonReader reader = new JsonReader(new InputStreamReader(con.getInputStream()));
             reader.beginArray();
-            while(reader.hasNext()){
+            while (reader.hasNext()) {
                 String id = null;
                 reader.beginObject();
-                while(reader.hasNext()){
-                    switch(reader.nextName()){
+                while (reader.hasNext()) {
+                    switch (reader.nextName()) {
                         case "id":
                             id = reader.nextString();
                             break;
-                            default:
-                                reader.skipValue();
+                        default:
+                            reader.skipValue();
                     }
                 }
                 reader.endObject();
@@ -49,5 +68,10 @@ public class LoadConversations extends AsyncTask<URL, Integer, List<Conversation
             e.printStackTrace();
         }
         return result;
+    }
+    @Override
+    protected void onPostExecute(List<Conversation> photos) {
+        if(callback != null)
+            callback.onPostExecute(photos);
     }
 }
