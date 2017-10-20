@@ -39,4 +39,5 @@ public class Conversation {
     public void setVersion(Timestamp version) {
         this.version = version;
     }
+
 }

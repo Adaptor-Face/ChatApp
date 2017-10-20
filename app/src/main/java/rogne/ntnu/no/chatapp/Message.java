@@ -18,6 +18,14 @@ public class Message {
         this.text = text;
     }
 
+    public Message(Long id, String user, String text, Timestamp version, Conversation conversation) {
+        this.id = id;
+        this.user = user;
+        this.text = text;
+        this.version = version;
+        this.conversation = conversation;
+    }
+
     public Long getId() {
         return id;
     }

@@ -18,6 +18,14 @@ import java.util.List;
 public class LoadMessages extends AsyncTask<String, Integer, List<Message>> {
     @Override
     protected List<Message> doInBackground(String... strings) {
+        if(strings.length<1){
+            return Collections.EMPTY_LIST;
+        }
+        List<Message> r = LocalDatabase.getMessages(new Conversation(strings[0]));
+        return r;
+    }
+    //TODO: Repalce local doInBacground with doInBackgroundActual
+    protected List<Message> doInBackgroundActual(String... strings) {
         if(strings.length < 2){
             return Collections.emptyList();
         }
@@ -55,4 +63,5 @@ public class LoadMessages extends AsyncTask<String, Integer, List<Message>> {
         }
         return result;
     }
+
 }

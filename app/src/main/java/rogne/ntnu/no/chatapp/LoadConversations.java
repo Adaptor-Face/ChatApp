@@ -30,15 +30,11 @@ public class LoadConversations extends AsyncTask<String, Integer, List<Conversat
         if(strings.length <1){
             return Collections.emptyList();
         }
-        List<Conversation> result = new ArrayList<>();
-        result.add(new Conversation("Tom:Frank.convo"));
-        result.add(new Conversation("Sandra:Frank.convo"));
-        result.add(new Conversation("Sandra:Tom.convo"));
-        result.add(new Conversation("Sandra:Frank:Frank.convo"));
+        List<Conversation> result = LocalDatabase.getConvos();
         return result;
     }
-    //TODO: replace tester function (doInBackground) with (doInBackgroundOld)
-    protected List<Conversation> doInBackgroundOld(URL... strings) {
+    //TODO: replace tester function (doInBackground) with (doInBackgroundActual)
+    protected List<Conversation> doInBackgroundActual(URL... strings) {
         if (strings.length < 1) {
             return Collections.emptyList();
         }
@@ -70,8 +66,8 @@ public class LoadConversations extends AsyncTask<String, Integer, List<Conversat
         return result;
     }
     @Override
-    protected void onPostExecute(List<Conversation> photos) {
+    protected void onPostExecute(List<Conversation> convos) {
         if(callback != null)
-            callback.onPostExecute(photos);
+            callback.onPostExecute(convos);
     }
 }

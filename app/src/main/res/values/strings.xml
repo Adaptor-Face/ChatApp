@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">ChatApp</string>
     <string name="action_settings">Settings</string>
+    <string-array name="drawer_option_array">
+    <item>All</item>
+    <item>Solo chats</item>
+    <item>Group chats</item>
+</string-array>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Web search</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
 </resources>
