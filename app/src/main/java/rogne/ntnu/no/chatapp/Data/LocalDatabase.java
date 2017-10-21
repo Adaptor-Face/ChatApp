@@ -16,7 +16,7 @@ public class LocalDatabase {
         convos.add(new Conversation("Tom:Frank.convo"));
         convos.add(new Conversation("Sandra:Frank.convo"));
         convos.add(new Conversation("Sandra:Tom.convo"));
-        convos.add(new Conversation("Sandra:Frank:Frank.convo"));
+        convos.add(new Conversation("Sandra:Frank:Tom.convo"));
     }
 
     private static List<Message> msgs = new ArrayList<>();
@@ -40,8 +40,14 @@ public class LocalDatabase {
         return convos.get(convos.indexOf(new Conversation(conversationId)));
     }
 
-    public static List<Conversation> getConvos(){
-        return convos;
+    public static List<Conversation> getConvos(String username){
+        List<Conversation> myConvos = new ArrayList<>();
+        for (Conversation c : convos){
+            if(c.getId().contains(username)){
+                myConvos.add(c);
+            }
+        }
+        return myConvos;
     }
     public static List<Message> getMessages(Conversation convo) {
         List<Message> result = new ArrayList<>();

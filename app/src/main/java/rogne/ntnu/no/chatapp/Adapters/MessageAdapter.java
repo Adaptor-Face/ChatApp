@@ -84,6 +84,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         notifyDataSetChanged();
     }
 
+    public void addMessage(Message message){
+        this.messages.add(message);
+        notifyDataSetChanged();
+    }
+
     public class MessageViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView message;

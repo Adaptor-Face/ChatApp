@@ -19,7 +19,7 @@ import rogne.ntnu.no.chatapp.R;
  */
 
 public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder> {
-    List<Conversation> convos = new ArrayList<>();
+    List<Conversation> conversations = new ArrayList<>();
     private final Context context;
     OnClickListener listener;
 
@@ -41,9 +41,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     @Override
     public void onBindViewHolder(ConversationAdapter.ConversationViewHolder holder, int position) {
-        Conversation convo = convos.get(position);
-        String[] convoParticipants = convo.getId().split("\\.");
-        String[] str = convoParticipants[0].split(":");
+        Conversation conversation = conversations.get(position);
+        String[] conversationParticipants = conversation.getId().split("\\.");
+        String[] str = conversationParticipants[0].split(":");
         holder.tv.setText("");
         String finalString = "";
         for(String s : str){
@@ -58,18 +58,22 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         this.listener = listener;
     }
 
-    public List<Conversation> getConvos() {
-        return convos;
+    public List<Conversation> getConversations() {
+        return conversations;
     }
 
-    public void setConvos(List<Conversation> convos) {
-        this.convos = convos;
+    public void setConversations(List<Conversation> conversations) {
+        this.conversations = conversations;
+        notifyDataSetChanged();
+    }
+    public void addConversation(Conversation conversation){
+        this.conversations.add(conversation);
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return convos.size();
+        return conversations.size();
     }
 
     public class ConversationViewHolder extends RecyclerView.ViewHolder {

@@ -32,7 +32,7 @@ public class LoadConversations extends AsyncTask<String, Integer, List<Conversat
         if(strings.length <1){
             return Collections.emptyList();
         }
-        List<Conversation> result = LocalDatabase.getConvos();
+        List<Conversation> result = LocalDatabase.getConvos(strings[0]);
         return result;
     }
     //TODO: replace tester function (doInBackground) with (doInBackgroundActual)

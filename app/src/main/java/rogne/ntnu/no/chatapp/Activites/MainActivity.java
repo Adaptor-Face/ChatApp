@@ -61,12 +61,12 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.conversations);
         rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new ConversationAdapter(this);
-        new LoadConversations(c -> adapter.setConvos(c)).execute("asd");
+        new LoadConversations(c -> adapter.setConversations(c)).execute("Tom");
         //TODO: Make own divider
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(),
                 ((LinearLayoutManager)rv.getLayoutManager()).getOrientation());
         rv.addItemDecoration(dividerItemDecoration);
-        adapter.setListener(v->  starConversationActivity(adapter.getConvos().get(v)));
+        adapter.setListener(v->  starConversationActivity(adapter.getConversations().get(v)));
         rv.setAdapter(adapter);
 
     }
