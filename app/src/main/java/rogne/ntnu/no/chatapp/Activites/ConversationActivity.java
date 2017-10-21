@@ -16,6 +16,8 @@ public class ConversationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //TODO: create toolbar
+        //TODO: send message to database
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
         Intent intent = getIntent();
