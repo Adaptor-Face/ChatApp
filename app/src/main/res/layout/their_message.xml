@@ -18,15 +18,14 @@
             android:id="@+id/theirMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="msg_text" />
+            android:text="msg_text"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
     </android.support.v7.widget.CardView>
 
     <TextView
         android:id="@+id/theirUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="usr_name"
         app:layout_constraintStart_toStartOf="@+id/theirCard"
         app:layout_constraintTop_toBottomOf="@+id/theirCard" />
