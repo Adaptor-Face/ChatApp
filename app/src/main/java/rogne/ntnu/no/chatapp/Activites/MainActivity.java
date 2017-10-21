@@ -1,5 +1,6 @@
 package rogne.ntnu.no.chatapp.Activites;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import rogne.ntnu.no.chatapp.Adapters.ConversationAdapter;
+import rogne.ntnu.no.chatapp.Data.Conversation;
 import rogne.ntnu.no.chatapp.Loaders.LoadConversations;
 import rogne.ntnu.no.chatapp.Data.LocalDatabase;
 import rogne.ntnu.no.chatapp.R;
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private LocalDatabase ld = new LocalDatabase();
-
+    public static final String CONVERSATION_ID = "no.ntnu.rogne.chatapp.CONVERSATION_ID";
 
     ConversationAdapter adapter;
 
@@ -64,10 +66,15 @@ public class MainActivity extends AppCompatActivity {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(),
                 ((LinearLayoutManager)rv.getLayoutManager()).getOrientation());
         rv.addItemDecoration(dividerItemDecoration);
-        adapter.setListener(v->  Snackbar.make(findViewById(R.id.fab), "" + adapter.getConvos().get(v).getId(), Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        adapter.setListener(v->  starConversationActivity(adapter.getConvos().get(v)));
         rv.setAdapter(adapter);
 
+    }
+
+    private void starConversationActivity(Conversation c){
+        Intent intent = new Intent(this, ConversationActivity.class);
+        intent.putExtra(CONVERSATION_ID, c.getId());
+        startActivity(intent);
     }
 
     @Override

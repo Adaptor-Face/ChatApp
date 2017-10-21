@@ -20,6 +20,14 @@ import rogne.ntnu.no.chatapp.Data.Message;
  */
 
 public class LoadMessages extends AsyncTask<String, Integer, List<Message>> {
+    public LoadMessages(OnPostExecute callback) {
+        this.callback = callback;
+    }
+
+    public interface OnPostExecute{
+        void onPostExecute(List<Message> messages);
+    }
+    OnPostExecute callback;
     @Override
     protected List<Message> doInBackground(String... strings) {
         if(strings.length<1){
@@ -66,6 +74,11 @@ public class LoadMessages extends AsyncTask<String, Integer, List<Message>> {
             e.printStackTrace();
         }
         return result;
+    }
+    @Override
+    protected void onPostExecute(List<Message> messages) {
+        if(callback != null)
+            callback.onPostExecute(messages);
     }
 
 }
