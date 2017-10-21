@@ -1,4 +1,4 @@
-package rogne.ntnu.no.chatapp;
+package rogne.ntnu.no.chatapp.Loaders;
 
 import android.os.AsyncTask;
 import android.util.JsonReader;
@@ -10,6 +10,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import rogne.ntnu.no.chatapp.Data.Conversation;
+import rogne.ntnu.no.chatapp.Data.LocalDatabase;
+import rogne.ntnu.no.chatapp.Data.Message;
 
 /**
  * Created by krist on 2017-10-18.

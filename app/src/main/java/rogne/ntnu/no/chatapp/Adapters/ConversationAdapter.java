@@ -1,4 +1,4 @@
-package rogne.ntnu.no.chatapp;
+package rogne.ntnu.no.chatapp.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -11,11 +11,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import rogne.ntnu.no.chatapp.Data.Conversation;
+import rogne.ntnu.no.chatapp.R;
+
 /**
  * Created by Kristoffer on 2017-10-18.
  */
 
-class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder> {
+public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder> {
     List<Conversation> convos = new ArrayList<>();
     private final Context context;
     OnClickListener listener;

@@ -1,4 +1,4 @@
-package rogne.ntnu.no.chatapp;
+package rogne.ntnu.no.chatapp.Data;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

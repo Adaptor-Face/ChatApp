@@ -1,6 +1,5 @@
-package rogne.ntnu.no.chatapp;
+package rogne.ntnu.no.chatapp.Activites;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,17 +9,17 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 
-import java.util.Locale;
+import rogne.ntnu.no.chatapp.Adapters.ConversationAdapter;
+import rogne.ntnu.no.chatapp.Loaders.LoadConversations;
+import rogne.ntnu.no.chatapp.Data.LocalDatabase;
+import rogne.ntnu.no.chatapp.R;
 
 public class MainActivity extends AppCompatActivity {
     private String[] drawer_options;
