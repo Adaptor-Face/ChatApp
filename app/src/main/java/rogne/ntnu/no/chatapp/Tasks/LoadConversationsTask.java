@@ -33,12 +33,79 @@ public class LoadConversationsTask extends AsyncTask<String, Integer, List<Conve
         if(strings.length <1){
             return Collections.emptyList();
         }
-        List<Conversation> conversations = fetchConversations(strings[0]);
+        List<Conversation> conversations = fetchConversationsFromServer(strings[0]);
         for(Conversation c : conversations){
-            c.setMessages(fetchMessages(c));
+            c.setMessages(fetchMessagesFromServer(c, strings[0]));
         }
         return conversations;
     }
+
+    private List<Message> fetchMessagesFromServer(Conversation c, String urlString) {
+
+        //TODO: check if actually works
+        List<Message> result = new ArrayList<>();
+        HttpURLConnection con;
+        try {
+            con = (HttpURLConnection) new URL(urlString + "?name=" + c.getId()).openConnection();
+            JsonReader reader = new JsonReader(new InputStreamReader(con.getInputStream()));
+            reader.beginArray();
+            while (reader.hasNext()) {
+                String user = null;
+                String text = null;
+                reader.beginObject();
+                while (reader.hasNext()) {
+                    switch (reader.nextName()) {
+                        case "user":
+                            user = reader.nextString();
+                            break;
+                        case "text":
+                            text = reader.nextString();
+                            break;
+                        default:
+                            reader.skipValue();
+                    }
+                }
+                reader.endObject();
+                result.add(new Message(user,text));
+            }
+            reader.endArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private List<Conversation> fetchConversationsFromServer(String urlString) {
+        List<Conversation> result = new ArrayList<>();
+        HttpURLConnection con;
+        urlString +=  "/convos";
+        try {
+            URL url = new URL("http://" + urlString);
+            con = (HttpURLConnection) url.openConnection();
+            JsonReader reader = new JsonReader(new InputStreamReader(con.getInputStream()));
+            reader.beginArray();
+            while (reader.hasNext()) {
+                String id = null;
+                reader.beginObject();
+                while (reader.hasNext()) {
+                    switch (reader.nextName()) {
+                        case "id":
+                            id = reader.nextString();
+                            break;
+                        default:
+                            reader.skipValue();
+                    }
+                }
+                reader.endObject();
+                result.add(new Conversation(id));
+            }
+            reader.endArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     //TODO: replace tester function (doInBackground) with (doInBackgroundActual)
     protected List<Conversation> doInBackgroundActual(URL... strings) {
         if (strings.length < 1) {

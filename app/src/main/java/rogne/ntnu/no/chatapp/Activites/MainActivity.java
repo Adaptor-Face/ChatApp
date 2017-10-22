@@ -30,7 +30,7 @@ import rogne.ntnu.no.chatapp.R;
 
 public class MainActivity extends AppCompatActivity {
     public static String USERNAME = "Tom";
-    public static final String URL = "999.999.999.999:8080/pstore/api/chat"; //TODO: FIX URL
+    public static final String URL = "158.38.92.82:8080/pstore/api/chat"; //TODO: FIX URL
     private String[] drawer_options;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ConversationAdapter(this);
         new LoadConversationsTask(c -> {
             adapter.setConversations(c);
-        }).execute("Tom");
+        }).execute(URL);
         //TODO: Make own divider
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(),
                 ((LinearLayoutManager) rv.getLayoutManager()).getOrientation());
