@@ -45,15 +45,20 @@ public class Conversation implements Serializable{
     }
 
     public Message getLastMessage(){
+        if(messages.isEmpty()){
+            return new Message("","");
+        }
         return messages.get(messages.size()-1);
     }
 
     public String getParticipants(String username) {
-        String[] conversationParticipants = getId().replace(username, "").split("\\.");
+        String[] conversationParticipants = getId().split("\\.");
         String[] str = conversationParticipants[0].split(":");
         String finalString = "";
         for(String s : str){
-            finalString += s + ", ";
+            if(!s.contains(username)) {
+                finalString += s + ", ";
+            }
         }
         finalString = finalString.trim();
         if(finalString.startsWith(",")){

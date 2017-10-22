@@ -25,22 +25,18 @@ public class Message implements Serializable{
         this.text = text;
     }
 
+    public Message(String user, String text, Conversation conversation) {
+        this.user = user;
+        this.text = text;
+        this.conversation = conversation;
+    }
+
     public Message(Long id, String user, String text, Timestamp version, Conversation conversation) {
         this.id = id;
         this.user = user;
         this.text = text;
         this.version = version;
         this.conversation = conversation;
-    }
-
-    protected Message(Parcel in) {
-        if (in.readByte() == 0) {
-            id = null;
-        } else {
-            id = in.readLong();
-        }
-        user = in.readString();
-        text = in.readString();
     }
 
     public Long getId() {

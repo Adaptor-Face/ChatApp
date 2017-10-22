@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import rogne.ntnu.no.chatapp.Activites.MainActivity;
 import rogne.ntnu.no.chatapp.Data.Conversation;
 import rogne.ntnu.no.chatapp.Data.LocalDatabase;
 import rogne.ntnu.no.chatapp.Data.Message;
@@ -78,9 +79,9 @@ public class LoadConversationsTask extends AsyncTask<String, Integer, List<Conve
     private List<Conversation> fetchConversationsFromServer(String urlString) {
         List<Conversation> result = new ArrayList<>();
         HttpURLConnection con;
-        urlString +=  "/convos";
+        urlString +=  "/conversation";
         try {
-            URL url = new URL("http://" + urlString);
+            URL url = new URL(urlString);
             con = (HttpURLConnection) url.openConnection();
             JsonReader reader = new JsonReader(new InputStreamReader(con.getInputStream()));
             reader.beginArray();
@@ -97,7 +98,9 @@ public class LoadConversationsTask extends AsyncTask<String, Integer, List<Conve
                     }
                 }
                 reader.endObject();
-                result.add(new Conversation(id));
+                if(id.contains(MainActivity.USERNAME) && id.contains(".convo")) {
+                    result.add(new Conversation(id));
+                }
             }
             reader.endArray();
         } catch (IOException e) {
@@ -133,6 +136,7 @@ public class LoadConversationsTask extends AsyncTask<String, Integer, List<Conve
                 result.add(new Conversation(id));
             }
             reader.endArray();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

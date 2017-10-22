@@ -41,7 +41,7 @@ public class PostMessageTask extends AsyncTask<Message, Void, Boolean> {
         }
         Message m = messages[0];
         try {
-            URL url = new URL(MainActivity.URL);
+            URL url = new URL(MainActivity.URL + "/add?name=" + m.getConversation().getId());
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setDoOutput(true);
             con.setDoInput(false);
@@ -53,18 +53,6 @@ public class PostMessageTask extends AsyncTask<Message, Void, Boolean> {
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
             JsonWriter writer = new JsonWriter(out);
             writer.beginObject().name("user").value(m.getUser()).name("text").value(m.getText()).endObject().close();
-            StringBuilder str = new StringBuilder();
-            int len;
-            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                Reader br = new InputStreamReader(new BufferedInputStream(con.getInputStream()), "UTF-8");
-                char[] cbuff = new char[1024];
-                while ((len = br.read(cbuff)) != -1) {
-                    str.append(cbuff, 0, len);
-                }
-                br.close();
-            } else {
-                Log.e("PostPicture", "ResponseCode: " + con.getResponseCode());
-            }
             con.disconnect();
         } catch (IOException e) {
             Log.e("PostPicture", "doInBackground: ", e);

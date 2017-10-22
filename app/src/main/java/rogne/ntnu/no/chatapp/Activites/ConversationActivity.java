@@ -20,6 +20,7 @@ import rogne.ntnu.no.chatapp.Tasks.PostMessageTask;
 
 public class ConversationActivity extends AppCompatActivity {
     MessageAdapter adapter;
+    Conversation conversation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,7 @@ public class ConversationActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.conversation_view);
         rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new MessageAdapter(this);
-        Conversation conversation = (Conversation) intent.getSerializableExtra(MainActivity.CONVERSATION_ID);
+        conversation = (Conversation) intent.getSerializableExtra(MainActivity.CONVERSATION_ID);
         adapter.setMessages(conversation.getMessages());
         ab.setTitle(conversation.getParticipants(getUsername()));
         rv.setAdapter(adapter);
@@ -49,7 +50,7 @@ public class ConversationActivity extends AppCompatActivity {
     public void onSendNewMessage(View view){
         EditText input = (EditText) findViewById(R.id.conversation_new_message);
         String message = input.getText().toString();
-        Message msg = new Message(MainActivity.USERNAME, message);
+        Message msg = new Message(MainActivity.USERNAME, message, conversation);
         new PostMessageTask(r-> {if(r){input.setText(""); adapter.addMessage(msg);}}).execute(msg);
 
     }
