@@ -68,8 +68,6 @@ public class PostMessageTask extends AsyncTask<Message, Void, Boolean> {
             con.disconnect();
         } catch (IOException e) {
             Log.e("PostPicture", "doInBackground: ", e);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         }
         return true;
     }
