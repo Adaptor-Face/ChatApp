@@ -13,6 +13,7 @@ public class LocalDatabase {
     private static List<Conversation> convos = new ArrayList<>();
 
     {
+        convos.clear();
         convos.add(new Conversation("Tom:Frank.convo"));
         convos.add(new Conversation("Sandra:Frank.convo"));
         convos.add(new Conversation("Sandra:Tom.convo"));
@@ -22,6 +23,7 @@ public class LocalDatabase {
     private static List<Message> msgs = new ArrayList<>();
 
     {
+        msgs.clear();
         msgs.add(new Message(new Long(0), "Tom", "Hello", new Timestamp(new Date().getTime()), convos.get(0)));
         msgs.add(new Message(new Long(1), "Sandra", "Hello", new Timestamp(new Date().getTime()), convos.get(1)));
         msgs.add(new Message(new Long(2), "Frank", "hi", new Timestamp(new Date().getTime()), convos.get(1)));

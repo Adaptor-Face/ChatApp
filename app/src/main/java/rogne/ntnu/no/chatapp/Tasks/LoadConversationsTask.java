@@ -1,4 +1,4 @@
-package rogne.ntnu.no.chatapp.Loaders;
+package rogne.ntnu.no.chatapp.Tasks;
 
 import android.os.AsyncTask;
 import android.util.JsonReader;
@@ -13,18 +13,19 @@ import java.util.List;
 
 import rogne.ntnu.no.chatapp.Data.Conversation;
 import rogne.ntnu.no.chatapp.Data.LocalDatabase;
+import rogne.ntnu.no.chatapp.Data.Message;
 
 /**
  * Created by Kristoffer on 2017-10-18.
  */
 
-public class LoadConversations extends AsyncTask<String, Integer, List<Conversation>> {
-    public LoadConversations(OnPostExecute callback) {
+public class LoadConversationsTask extends AsyncTask<String, Integer, List<Conversation>> {
+    public LoadConversationsTask(OnPostExecute callback) {
         this.callback = callback;
     }
 
     public interface OnPostExecute{
-        void onPostExecute(List<Conversation> convos);
+        void onPostExecute(List<Conversation> conversations);
     }
     OnPostExecute callback;
     @Override
@@ -32,8 +33,11 @@ public class LoadConversations extends AsyncTask<String, Integer, List<Conversat
         if(strings.length <1){
             return Collections.emptyList();
         }
-        List<Conversation> result = LocalDatabase.getConvos(strings[0]);
-        return result;
+        List<Conversation> conversations = fetchConversations(strings[0]);
+        for(Conversation c : conversations){
+            c.setMessages(fetchMessages(c));
+        }
+        return conversations;
     }
     //TODO: replace tester function (doInBackground) with (doInBackgroundActual)
     protected List<Conversation> doInBackgroundActual(URL... strings) {
@@ -68,8 +72,15 @@ public class LoadConversations extends AsyncTask<String, Integer, List<Conversat
         return result;
     }
     @Override
-    protected void onPostExecute(List<Conversation> convos) {
+    protected void onPostExecute(List<Conversation> conversations) {
         if(callback != null)
-            callback.onPostExecute(convos);
+            callback.onPostExecute(conversations);
+    }
+
+    private List<Conversation> fetchConversations(String user){
+        return LocalDatabase.getConvos(user);
+    }
+    private List<Message> fetchMessages(Conversation conversation){
+        return LocalDatabase.getMessages(conversation);
     }
 }

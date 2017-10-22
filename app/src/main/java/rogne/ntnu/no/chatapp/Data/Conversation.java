@@ -1,5 +1,6 @@
 package rogne.ntnu.no.chatapp.Data;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -7,13 +8,16 @@ import java.util.List;
  * Created by Kristoffer on 2017-10-18.
  */
 
-public class Conversation {
+public class Conversation implements Serializable{
     String id;
     List<Message> messages;
     Timestamp version;
 
     public Conversation(String id) {
         this.id = id;
+    }
+
+    public Conversation() {
     }
 
     public String getId() {
@@ -38,6 +42,27 @@ public class Conversation {
 
     public void setVersion(Timestamp version) {
         this.version = version;
+    }
+
+    public Message getLastMessage(){
+        return messages.get(messages.size()-1);
+    }
+
+    public String getParticipants(String username) {
+        String[] conversationParticipants = getId().replace(username, "").split("\\.");
+        String[] str = conversationParticipants[0].split(":");
+        String finalString = "";
+        for(String s : str){
+            finalString += s + ", ";
+        }
+        finalString = finalString.trim();
+        if(finalString.startsWith(",")){
+            finalString = finalString.substring(2);
+        }
+        if(finalString.endsWith(",")){
+            finalString = finalString.substring(0, finalString.length() -1);
+        }
+        return finalString;
     }
 
 }

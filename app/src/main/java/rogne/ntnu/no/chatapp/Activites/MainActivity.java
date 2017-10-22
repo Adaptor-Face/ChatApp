@@ -17,19 +17,25 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import rogne.ntnu.no.chatapp.Adapters.ConversationAdapter;
 import rogne.ntnu.no.chatapp.Data.Conversation;
-import rogne.ntnu.no.chatapp.Loaders.LoadConversations;
+import rogne.ntnu.no.chatapp.Tasks.LoadConversationsTask;
 import rogne.ntnu.no.chatapp.Data.LocalDatabase;
 import rogne.ntnu.no.chatapp.R;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String USERNAME = "Tom";
+    public static final String URL = "999.999.999.999:8080/pstore/api/chat"; //TODO: FIX URL
     private String[] drawer_options;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private LocalDatabase ld = new LocalDatabase();
+    private List<Conversation> myMessages = new ArrayList<>();
     public static final String CONVERSATION_ID = "no.ntnu.rogne.chatapp.CONVERSATION_ID";
 
     ConversationAdapter adapter;
@@ -45,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(view -> {
             Snackbar.make(view, "" + view.getId() + "  " + R.id.fab, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-
         });
 
         drawer_options = getResources().getStringArray(R.array.drawer_option_array);
@@ -61,19 +66,20 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.conversations);
         rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new ConversationAdapter(this);
-        new LoadConversations(c -> adapter.setConversations(c)).execute("Tom");
+        new LoadConversationsTask(c -> {
+            adapter.setConversations(c);
+        }).execute("Tom");
         //TODO: Make own divider
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(),
-                ((LinearLayoutManager)rv.getLayoutManager()).getOrientation());
+                ((LinearLayoutManager) rv.getLayoutManager()).getOrientation());
         rv.addItemDecoration(dividerItemDecoration);
-        adapter.setListener(v->  starConversationActivity(adapter.getConversations().get(v)));
+        adapter.setListener(v -> starConversationActivity(adapter.getConversations().get(v)));
         rv.setAdapter(adapter);
-
     }
 
-    private void starConversationActivity(Conversation c){
+    private void starConversationActivity(Conversation c) {
         Intent intent = new Intent(this, ConversationActivity.class);
-        intent.putExtra(CONVERSATION_ID, c.getId());
+        intent.putExtra(CONVERSATION_ID, c);
         startActivity(intent);
     }
 
@@ -82,6 +88,11 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -98,12 +109,14 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
         }
     }
+
     private void selectItem(int position) {
         // Highlight the selected item, update the title, and close the drawer
         mDrawerList.setItemChecked(position, true);

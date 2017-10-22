@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import rogne.ntnu.no.chatapp.Activites.MainActivity;
 import rogne.ntnu.no.chatapp.Data.Conversation;
 import rogne.ntnu.no.chatapp.R;
 
@@ -42,15 +43,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     @Override
     public void onBindViewHolder(ConversationAdapter.ConversationViewHolder holder, int position) {
         Conversation conversation = conversations.get(position);
-        String[] conversationParticipants = conversation.getId().split("\\.");
-        String[] str = conversationParticipants[0].split(":");
-        holder.tv.setText("");
-        String finalString = "";
-        for(String s : str){
-            finalString += s + ", ";
-        }
-        finalString = finalString.substring(0, finalString.length() -2); //TODO: Remove/replace own name from conversation list
-        holder.tv.append(finalString);
+        holder.conversationParticipants.setText("");
+        String conversationTitle = conversation.getParticipants(MainActivity.USERNAME);
+        holder.conversationParticipants.append(conversationTitle);
+        holder.lastMessage.setText(conversation.getLastMessage().toMessageString().replace(MainActivity.USERNAME, "You"));
 
     }
 
@@ -66,6 +62,17 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         this.conversations = conversations;
         notifyDataSetChanged();
     }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+
     public void addConversation(Conversation conversation){
         this.conversations.add(conversation);
         notifyDataSetChanged();
@@ -78,12 +85,14 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     public class ConversationViewHolder extends RecyclerView.ViewHolder {
         //TODO: Improve visuals
-        public TextView tv;
+        public TextView conversationParticipants;
+        public TextView lastMessage;
         public CardView cv;
 
         public ConversationViewHolder(View itemView) {
             super(itemView);
-            this.tv = itemView.findViewById(R.id.conversation_card_text);
+            this.conversationParticipants = itemView.findViewById(R.id.conversation_card_text);
+            this.lastMessage = itemView.findViewById(R.id.conversation_last_message);
             this.cv = itemView.findViewById(R.id.conversation_card);
             itemView.setOnClickListener(view -> {
                 if(listener != null) {

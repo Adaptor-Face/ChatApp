@@ -1,4 +1,4 @@
-package rogne.ntnu.no.chatapp.Loaders;
+package rogne.ntnu.no.chatapp.Tasks;
 
 import android.os.AsyncTask;
 import android.util.JsonReader;
@@ -19,8 +19,8 @@ import rogne.ntnu.no.chatapp.Data.Message;
  * Created by krist on 2017-10-18.
  */
 
-public class LoadMessages extends AsyncTask<String, Integer, List<Message>> {
-    public LoadMessages(OnPostExecute callback) {
+public class LoadMessagesTask extends AsyncTask<Conversation, Integer, List<Message>> {
+    public LoadMessagesTask(OnPostExecute callback) {
         this.callback = callback;
     }
 
@@ -29,11 +29,14 @@ public class LoadMessages extends AsyncTask<String, Integer, List<Message>> {
     }
     OnPostExecute callback;
     @Override
-    protected List<Message> doInBackground(String... strings) {
-        if(strings.length<1){
+    protected List<Message> doInBackground(Conversation... conversations) {
+        if(conversations.length<1){
             return Collections.EMPTY_LIST;
         }
-        List<Message> r = LocalDatabase.getMessages(new Conversation(strings[0]));
+        List<Message> r = new ArrayList<>();
+        for(int i = 0; i < conversations.length; i++) {
+           r.addAll(LocalDatabase.getMessages(conversations[i]));
+        }
         return r;
     }
     //TODO: Repalce local doInBacground with doInBackgroundActual

@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="rogne.ntnu.no.chatapp.Activites.ConversationActivity">
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/conversation_view"
         android:layout_width="0dp"

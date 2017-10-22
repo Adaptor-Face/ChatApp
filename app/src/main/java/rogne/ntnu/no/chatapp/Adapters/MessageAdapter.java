@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import rogne.ntnu.no.chatapp.Activites.MainActivity;
 import rogne.ntnu.no.chatapp.Data.Message;
 import rogne.ntnu.no.chatapp.R;
 
@@ -63,7 +64,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(MessageAdapter.MessageViewHolder holder, int position) {
         Message msg = messages.get(position);
         holder.message.setText(msg.getText());
-        holder.username.setText(msg.getUser());
+        holder.username.setText(msg.getUser().replace(MainActivity.USERNAME,"You"));
     }
 
     @Override

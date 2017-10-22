@@ -1,17 +1,24 @@
 package rogne.ntnu.no.chatapp.Data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * Created by Kristoffer on 2017-10-18.
  */
 
-public class Message {
+public class Message implements Serializable{
     Long id;
     String user;
     String text;
     Timestamp version;
     Conversation conversation;
+
+    public Message() {
+    }
 
     public Message(String user, String text) {
         this.user = user;
@@ -24,6 +31,16 @@ public class Message {
         this.text = text;
         this.version = version;
         this.conversation = conversation;
+    }
+
+    protected Message(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
+        user = in.readString();
+        text = in.readString();
     }
 
     public Long getId() {
@@ -64,5 +81,9 @@ public class Message {
 
     public void setConversation(Conversation conversation) {
         this.conversation = conversation;
+    }
+
+    public String toMessageString(){
+        return user + ": " + text;
     }
 }
