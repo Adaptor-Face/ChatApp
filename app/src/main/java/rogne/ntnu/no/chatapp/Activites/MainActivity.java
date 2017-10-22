@@ -1,22 +1,26 @@
 package rogne.ntnu.no.chatapp.Activites;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -27,6 +31,7 @@ import rogne.ntnu.no.chatapp.Data.Conversation;
 import rogne.ntnu.no.chatapp.Tasks.LoadConversationsTask;
 import rogne.ntnu.no.chatapp.Data.LocalDatabase;
 import rogne.ntnu.no.chatapp.R;
+import rogne.ntnu.no.chatapp.Tasks.NewConversationTask;
 
 public class MainActivity extends AppCompatActivity {
     public static String USERNAME = "Tom";
@@ -51,8 +56,32 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            Snackbar.make(view, "" + view.getId() + "  " + R.id.fab, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            final StringBuilder text = new StringBuilder();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Title");
+
+// Set up the input
+            final EditText input = new EditText(this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            builder.setView(input);
+
+// Set up the buttons
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    text.append(input.getText().toString());
+                    createNewConversation(text.toString());
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
         });
 
         drawer_options = getResources().getStringArray(R.array.drawer_option_array);
@@ -78,6 +107,13 @@ public class MainActivity extends AppCompatActivity {
         adapter.setListener(v -> starConversationActivity(adapter.getConversations().get(v)));
         rv.setAdapter(adapter);
         saveData();
+    }
+
+    private void createNewConversation(String s) {
+        if(!s.isEmpty()) {
+            Conversation c = new Conversation(USERNAME,s);
+            new NewConversationTask(result -> {if(result){adapter.addConversation(c);}}).execute(c);
+        }
     }
 
     private void saveData() {

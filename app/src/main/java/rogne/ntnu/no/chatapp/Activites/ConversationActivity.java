@@ -21,6 +21,7 @@ import rogne.ntnu.no.chatapp.Tasks.PostMessageTask;
 public class ConversationActivity extends AppCompatActivity {
     MessageAdapter adapter;
     Conversation conversation;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +30,15 @@ public class ConversationActivity extends AppCompatActivity {
         Intent intent = getIntent();
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
-        RecyclerView rv = (RecyclerView) findViewById(R.id.conversation_view);
-        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView = (RecyclerView) findViewById(R.id.conversation_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new MessageAdapter(this);
         conversation = (Conversation) intent.getSerializableExtra(MainActivity.CONVERSATION_ID);
         adapter.setMessages(conversation.getMessages());
         ab.setTitle(conversation.getParticipants(getUsername()));
-        rv.setAdapter(adapter);
-        adapter.setListener(v->  Snackbar.make(rv, "" + adapter.getMessages().get(v).getId(), Snackbar.LENGTH_LONG)
+        recyclerView.setAdapter(adapter);
+        updateView();
+        adapter.setListener(v -> Snackbar.make(recyclerView, "" + adapter.getMessages().get(v).getId(), Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
     }
 
@@ -47,11 +49,20 @@ public class ConversationActivity extends AppCompatActivity {
         return username;
     }
 
-    public void onSendNewMessage(View view){
+    public void onSendNewMessage(View view) {
         EditText input = (EditText) findViewById(R.id.conversation_new_message);
         String message = input.getText().toString();
         Message msg = new Message(MainActivity.USERNAME, message, conversation);
-        new PostMessageTask(r-> {if(r){input.setText(""); adapter.addMessage(msg);}}).execute(msg);
+        new PostMessageTask(r -> {
+            if (r) {
+                input.setText("");
+                adapter.addMessage(msg);
+            }
+        }).execute(msg);
+        updateView();
+    }
 
+    public void updateView() {
+        recyclerView.post(() -> recyclerView.smoothScrollToPosition(adapter.getItemCount()));
     }
 }

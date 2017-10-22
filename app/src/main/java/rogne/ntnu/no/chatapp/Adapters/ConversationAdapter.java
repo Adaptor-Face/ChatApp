@@ -13,6 +13,7 @@ import java.util.List;
 
 import rogne.ntnu.no.chatapp.Activites.MainActivity;
 import rogne.ntnu.no.chatapp.Data.Conversation;
+import rogne.ntnu.no.chatapp.Data.Message;
 import rogne.ntnu.no.chatapp.R;
 
 /**
@@ -46,7 +47,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         holder.conversationParticipants.setText("");
         String conversationTitle = conversation.getParticipants(MainActivity.USERNAME);
         holder.conversationParticipants.append(conversationTitle);
-        holder.lastMessage.setText(conversation.getLastMessage().toMessageString().replace(MainActivity.USERNAME, "You"));
+        Message m = conversation.getLastMessage();
+        if(m != null) {
+            holder.lastMessage.setText(m.toMessageString().replace(MainActivity.USERNAME, "You"));
+        } else {
+            holder.lastMessage.setText("No messages to show.");
+        }
 
     }
 
