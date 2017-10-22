@@ -1,6 +1,7 @@
 package rogne.ntnu.no.chatapp.Activites;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +29,7 @@ import rogne.ntnu.no.chatapp.Data.LocalDatabase;
 import rogne.ntnu.no.chatapp.R;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String USERNAME = "Tom";
+    public static String USERNAME = "Tom";
     public static final String URL = "999.999.999.999:8080/pstore/api/chat"; //TODO: FIX URL
     private String[] drawer_options;
     private DrawerLayout mDrawerLayout;
@@ -75,6 +77,15 @@ public class MainActivity extends AppCompatActivity {
         rv.addItemDecoration(dividerItemDecoration);
         adapter.setListener(v -> starConversationActivity(adapter.getConversations().get(v)));
         rv.setAdapter(adapter);
+        saveData();
+    }
+
+    private void saveData() {
+        SharedPreferences.Editor spe = getPreferences(MODE_PRIVATE).edit();
+        spe.putString("USERNAME", USERNAME);
+        spe.putString("url", URL);
+        spe.apply();
+        Log.d("saveData", "Saved data: Username = " + USERNAME + ", url = " + URL);
     }
 
     private void starConversationActivity(Conversation c) {
