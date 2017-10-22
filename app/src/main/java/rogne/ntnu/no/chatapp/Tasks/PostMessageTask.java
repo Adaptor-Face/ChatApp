@@ -11,11 +11,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
-import rogne.ntnu.no.chatapp.Activites.MainActivity;
+import rogne.ntnu.no.chatapp.Activities.MainActivity;
 import rogne.ntnu.no.chatapp.Data.Message;
 
 /**

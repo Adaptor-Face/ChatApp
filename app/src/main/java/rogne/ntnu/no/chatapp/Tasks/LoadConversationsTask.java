@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import rogne.ntnu.no.chatapp.Activites.MainActivity;
+import rogne.ntnu.no.chatapp.Activities.MainActivity;
 import rogne.ntnu.no.chatapp.Data.Conversation;
 import rogne.ntnu.no.chatapp.Data.LocalDatabase;
 import rogne.ntnu.no.chatapp.Data.Message;

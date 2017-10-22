@@ -1,21 +1,17 @@
 package rogne.ntnu.no.chatapp.Tasks;
 
 import android.os.AsyncTask;
-import android.util.JsonWriter;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.List;
 
-import rogne.ntnu.no.chatapp.Activites.MainActivity;
+import rogne.ntnu.no.chatapp.Activities.MainActivity;
 import rogne.ntnu.no.chatapp.Data.Conversation;
 
 /**

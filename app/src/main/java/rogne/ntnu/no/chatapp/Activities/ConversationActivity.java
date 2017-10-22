@@ -1,4 +1,4 @@
-package rogne.ntnu.no.chatapp.Activites;
+package rogne.ntnu.no.chatapp.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

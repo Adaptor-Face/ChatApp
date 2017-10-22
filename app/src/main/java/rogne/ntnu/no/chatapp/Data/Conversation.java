@@ -30,7 +30,7 @@ public class Conversation implements Serializable{
             for(String s : strings){
                 idString += s + ":";
             }
-            idString = idString.substring(0,idString.length()-2) + ".convo";
+            idString = idString.substring(0,idString.length()-1) + ".convo";
             this.id = idString;
         }
 
