@@ -22,9 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import rogne.ntnu.no.chatapp.Adapters.ConversationAdapter;
 import rogne.ntnu.no.chatapp.Data.Conversation;
 import rogne.ntnu.no.chatapp.Tasks.LoadConversationsTask;
@@ -33,15 +30,14 @@ import rogne.ntnu.no.chatapp.R;
 import rogne.ntnu.no.chatapp.Tasks.NewConversationTask;
 
 public class MainActivity extends AppCompatActivity {
-    public static String USERNAME = "Tom";
-    public static final String URL = "http://158.38.92.82:8080/pstore/api/chat"; //TODO: FIX URL
+    public static String USERNAME = "Sandra";
+    public static final String URL = "http://192.168.0.101:8080/pstore/api/chat"; //TODO: FIX URL
     private String[] drawer_options;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    private CharSequence mDrawerTitle;
+    private RecyclerView mRecyclerView;
     private CharSequence mTitle;
     private LocalDatabase ld = new LocalDatabase();
-    private List<Conversation> myMessages = new ArrayList<>();
     public static final String CONVERSATION_ID = "no.ntnu.rogne.chatapp.CONVERSATION_ID";
 
     ConversationAdapter adapter;
@@ -57,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(view -> {
             final StringBuilder text = new StringBuilder();
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Title");
+            builder.setTitle("Enter username");
 
 // Set up the input
             final EditText input = new EditText(this);
@@ -93,25 +89,32 @@ public class MainActivity extends AppCompatActivity {
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        RecyclerView rv = (RecyclerView) findViewById(R.id.conversations);
-        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView = (RecyclerView) findViewById(R.id.conversations);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        updateConversations();
+        //TODO: Make own divider
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                ((LinearLayoutManager) mRecyclerView.getLayoutManager()).getOrientation());
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
+        adapter.setListener(v -> starConversationActivity(adapter.getConversations().get(v)));
+        mRecyclerView.setAdapter(adapter);
+        saveData();
+    }
+
+
+
+
+    private void updateConversations() {
         adapter = new ConversationAdapter(this);
         new LoadConversationsTask(c -> {
             adapter.setConversations(c);
         }).execute(URL);
-        //TODO: Make own divider
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(),
-                ((LinearLayoutManager) rv.getLayoutManager()).getOrientation());
-        rv.addItemDecoration(dividerItemDecoration);
-        adapter.setListener(v -> starConversationActivity(adapter.getConversations().get(v)));
-        rv.setAdapter(adapter);
-        saveData();
     }
 
     private void createNewConversation(String s) {
         if(!s.isEmpty()) {
             Conversation c = new Conversation(USERNAME,s);
-            new NewConversationTask(result -> {if(result){adapter.addConversation(c);}}).execute(c);
+            new NewConversationTask(result -> {if(result){adapter.addConversation(c); mRecyclerView.smoothScrollToPosition(adapter.getItemCount());}}).execute(c);
         }
     }
 
@@ -139,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        updateConversations();
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import rogne.ntnu.no.chatapp.Adapters.MessageAdapter;
@@ -21,24 +22,27 @@ import rogne.ntnu.no.chatapp.Tasks.PostMessageTask;
 public class ConversationActivity extends AppCompatActivity {
     MessageAdapter adapter;
     Conversation conversation;
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
         Intent intent = getIntent();
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        ((EditText) findViewById(R.id.conversation_new_message)).setOnClickListener(c -> mRecyclerView.smoothScrollToPosition(adapter.getItemCount()));
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
-        recyclerView = (RecyclerView) findViewById(R.id.conversation_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView = (RecyclerView) findViewById(R.id.conversation_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new MessageAdapter(this);
         conversation = (Conversation) intent.getSerializableExtra(MainActivity.CONVERSATION_ID);
         adapter.setMessages(conversation.getMessages());
         ab.setTitle(conversation.getParticipants(getUsername()));
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);
         updateView();
-        adapter.setListener(v -> Snackbar.make(recyclerView, "" + adapter.getMessages().get(v).getId(), Snackbar.LENGTH_LONG)
+        adapter.setListener(v -> Snackbar.make(mRecyclerView, "" + adapter.getMessages().get(v).getId(), Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
     }
 
@@ -57,12 +61,13 @@ public class ConversationActivity extends AppCompatActivity {
             if (r) {
                 input.setText("");
                 adapter.addMessage(msg);
+                mRecyclerView.smoothScrollToPosition(adapter.getItemCount());
             }
         }).execute(msg);
         updateView();
     }
 
     public void updateView() {
-        recyclerView.post(() -> recyclerView.smoothScrollToPosition(adapter.getItemCount()));
+        mRecyclerView.post(() -> mRecyclerView.smoothScrollToPosition(adapter.getItemCount()));
     }
 }

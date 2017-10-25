@@ -54,7 +54,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public int getItemViewType(int position) {
         //TODO: Replace with actual username
-        if (messages.get(position).getUser().equals("Tom")) {
+        if (messages.get(position).getUser().equals(MainActivity.USERNAME)) {
             return 1;
         }
         return 0;
